@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>States</title>
+</head>
+	<body>
+		{% for state, cities in states.items %}
+
+			<h3>{{ state }}</h3>
+			<u1>
+			{% for city in cities.values %}
+				<li>{{ city.city }}</li>
+			{% endfor %}
+			</u1>
+
+			</br>
+		{% endfor %}
+	</body>
+</html>
