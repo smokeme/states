@@ -1,0 +1,21 @@
+</html>
+<body>
+{% for x, y in videos %}
+<a href='{{y}}'>{{x}}</a>
+<br>
+{% endfor %}
+<input name="txtSearch" maxlength="12" size="25" type="text" class="field" id="txtSearch" />
+<div>&nbsp;</div>
+
+<div class="button style="display:inline-block">
+<a type="submit" href="javascript:void(0);" onclick="pgredirect();">Submit</a>
+</div>
+
+<script type="text/javascript">
+    function pgredirect(){
+        window.location.href = 'http://smokemeh.mooo.com/detail.html/' + document.getElementById('txtSearch').value + '/';
+    }
+</script>
+
+</body>
+</html>

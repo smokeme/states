@@ -25,7 +25,7 @@ SECRET_KEY = 'o)6d_mlh^nyejez+66%i2zk4!sr!m9qv^t*_=re_0uo*k6xoy4'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', '45.79.156.83', 'smokemeh.mooo.com']
 
 
 # Application definition
@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main',
+#    'youtube_dl',    
 )
 
 MIDDLEWARE_CLASSES = (
@@ -78,7 +79,7 @@ WSGI_APPLICATION = 'states.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': '/sites/projects/states/db.sqlite3',
     }
 }
 
@@ -102,6 +103,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
+#STATIC_ROOT '/sites/projects/states/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+#MEDIA_ROOT = '/sites/projects/states/media/'

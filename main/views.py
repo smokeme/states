@@ -1,7 +1,14 @@
+from __future__ import unicode_literals
+import subprocess
+import youtube_dl
+
+from subprocess import call
+from commands import getstatusoutput
+#from shell import ex
 from django.shortcuts import render
 from django.http import HttpResponse
 from main.models import State, StateCapital, StateCities
-# Create your views here.
+#Create your views here.
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, render_to_response, redirect
 from django.template import RequestContext
@@ -11,8 +18,7 @@ from django.views.generic.detail import DetailView
 from django.contrib.auth.decorators import login_required
 #forms
 from main.forms import CitySearchForm, CreateCityForm, CityEditForm
-
-
+#from youtube_api.models import Video
 # Create your views here.
 
 @csrf_exempt
@@ -117,14 +123,110 @@ def template_view(request):
 
 	return render(request, 'state_list.html', context)
 
+from apiclient.discovery import build
+from apiclient.errors import HttpError
+from oauth2client.tools import argparser
+
+
+# Set DEVELOPER_KEY to the API key value from the APIs & auth > Registered apps
+# tab of
+#   https://cloud.google.com/console
+# Please ensure that you have enabled the YouTube Data API for your project.
+DEVELOPER_KEY = "AIzaSyAbwYCIjzeW9bqPftj2lizjyx4nOQ_0Rrs"
+YOUTUBE_API_SERVICE_NAME = "youtube"
+YOUTUBE_API_VERSION = "v3"
+
+def youtube_search(options):
+  youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
+    developerKey=DEVELOPER_KEY)
+
+  # Call the search.list method to retrieve results matching the specified
+  # query term.
+  search_response = youtube.search().list(
+    q=options,
+    part="id,snippet",
+    maxResults= 10
+  ).execute()
+
+  videos = []
+  channels = []
+  playlists = []
+  x = 0
+  # Add each result to the appropriate list, and then display the lists of
+  # matching videos, channels, and playlists.
+  for search_result in search_response.get("items", []):
+    if search_result["id"]["kind"] == "youtube#video":
+      videos.append([search_result["snippet"]["title"], "http://smokemeh.mooo.com/youtube/?url=" + search_result["id"]["videoId"]])
+      x=x+1    
+  return videos
+  #print "Channels:\n", "\n".join(channels), "\n"
+  #print "Playlists:\n", "\n".join(playlists), "\n"
+
 def details_view(request, name):
 	context = {}
-	state = State.objects.get(name=name)
-	context['state'] = state
-	return render(request, 'state_details.html', context)
+#	state = State.objects.get(name=name)
+#	context['state'] = state
+	videos = youtube_search(name)
+	context['videos'] = videos
+#	return render(request, 'state_details.html', context)
+	return render(request, 'videos.html', context)
 
 
+#from __future__ import unicode_literals
+#from youtube_dl import YoutubeDL
 
+
+class MyLogger(object):
+    def debug(self, msg):
+        pass
+
+    def warning(self, msg):
+        pass
+
+    def error(self, msg):
+        return HttpResponse(msg)
+
+
+def my_hook(d):
+    if d['status'] == 'finished':
+        #return HttpResponse('Done downloading, now converting ...')
+        print "x"
+
+ydl_opts = {
+    'outtmpl': '/sites/projects/states/media/%(id)s.mp3',
+    'format': 'bestaudio',
+    'logger': MyLogger(),
+    'progress_hooks': [my_hook],
+}
+from django.http import FileResponse
+from wsgiref.util import FileWrapper
+from django.core.servers.basehttp import FileWrapper
+
+def get_youtube(request):
+	context = {}
+	get_var = request.GET.get('url', None)
+	uurl = getit(get_var)
+	context['url'] = 'http://smokemeh.mooo.com/media/' + get_var + '.mp3'
+	return render(request, 'listen.html', context)
+	#filename = '/sites/projects/states/media/' + get_var + '.mp3'
+	#wrapper = FileWrapper(file(filename, 'rb'))
+	#response = HttpResponse(wrapper, content_type='audio/mp3')
+	#response['Content-Length'] = os.path.getsize(filename)
+#	response = FileResponse(open('/sites/projects/states/media/' + get_var + '.mp3', 'rb'))
+	#return response
+import os
+def getit(url):
+	with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+	    x = ydl.download(['http://www.youtube.com/watch?v=' + url])
+	#return x['ext'] 
+	#os.system("youtube-dl", "-x", "--audio-format", "mp3", "-o", "/sites/projects/states/media/" + url + ".mp3", "https://www.youtube.com/watch?v=" + url)
+	#command = "youtube-dl -x --audio-format mp3 -o /sites/projects/states/media/" + url + ".mp3 https://www.youtube.com/watch?v=" + url 
+	#os.system(x)
+	#command = "youtube-dl https://www.youtube.com/watch?v=NG3WygJmiVs -c"
+	#y = call(command.split(), shell=False)
+	#return y
+#except Exception, e:
+	#	return None
 class StateListView(ListView):
 	model = State
 	template_name = 'state_list.html'

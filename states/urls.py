@@ -18,6 +18,7 @@ urlpatterns = [
     url(r'^cbv_list/', views.StateListView.as_view()),
     url(r'^cbv_detail/(?P<pk>[0-9]+)/$', views.StateDetailView.as_view()),
     url(r'^city_search/$', 'main.views.city_search'),
+    url(r'^youtube/$', 'main.views.get_youtube'),
     url(r'^city_create/$', 'main.views.city_create'),
     url(r'^city_delete/(?P<pk>[0-9]+)/$', 'main.views.city_delete'),
     url(r'^city_edit/(?P<pk>[0-9]+)/$', 'main.views.city_edit'),
