@@ -4,10 +4,6 @@ import random
 
 REPO_URL = 'http://github.com/mhadam/testing-goat.git'
 
-def setenv(foo):
-  env.hosts = ['localhost']
-  return env
-
 def _create_directory_structure_if_necessary(site_folder):
     for subfolder in ('database', 'static', 'virtualenv', 'source'):
         run('mkdir -p %s/%s' % (site_folder, subfolder))
@@ -53,12 +49,12 @@ def _update_database(source_folder):
     ))
 
 def setenv():
-  env.hosts = ['localhost']
+  env.hosts = ['50.116.15.21']
   env.user = 'django'
-  env.password = 'password'
+  env.password = 'password4455'
 
   return env
-@hosts(['localhost'])
+@hosts(['50.116.15.21'])
 def deploy():
     site_folder = '/home/%s/sites/%s' % (env.user, env.host)
     source_folder = site_folder + '/source'
