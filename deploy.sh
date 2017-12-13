@@ -1,5 +1,6 @@
 #!/bin/bash
 apt update
+export DEBIAN_FRONTEND=noninteractive
 apt upgrade -y
 apt install python-pip -y
 apt install git -y
