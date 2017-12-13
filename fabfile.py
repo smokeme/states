@@ -56,6 +56,7 @@ def setenv():
   return env
 @hosts(['172.104.189.193'])
 def deploy():
+    env = setenv()
     site_folder = '/home/%s/sites/%s' % (env.user, env.host)
     source_folder = site_folder + '/source'
     _create_directory_structure_if_necessary(site_folder)
