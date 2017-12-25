@@ -49,12 +49,12 @@ def _update_database(source_folder):
     ))
 
 def setenv():
-  env.hosts = ['103.3.61.191']
+  env.hosts = ['139.162.2.246']
   env.user = 'django'
   env.password = 'password4455'
 
   return env
-@hosts(['103.3.61.191'])
+@hosts(['139.162.2.246'])
 def deploy():
     env = setenv()
     site_folder = '/home/%s/sites/%s' % (env.user, env.host)
